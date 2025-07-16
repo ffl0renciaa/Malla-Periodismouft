@@ -1,1 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Malla Interactiva Periodismo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .semestre {
+      width: 100%;
+      max-width: 800px;
+      margin: 20px 0 10px 0;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: left;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      max-width: 800px;
+    }
+    .ramo {
+      flex: 1 1 150px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      cursor: pointer;
+      text-align: center;
+      padding: 5px;
+      user-select: none;
+      transition: 0.3s;
+    }
+    .no-aprobado {
+      background-color: purple; /* morado */
+      color: white;
+    }
+    .aprobado {
+      background-color: #d8b4fe; /* lila claro */
+      color: black;
+      text-decoration: line-through;
+    }
+    .bloqueado {
+      background-color: grey;
+      color: white;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ejemplo de estructura con tus primeros semestres -->
+  <div class="semestre">1° Semestre</div>
+  <div class="container">
+    <div class="ramo no-aprobado" data-prereq="">Habilidades del Lenguaje I</div>
+    <div class="ramo no-aprobado" data-prereq="">Pensamiento Crítico I</div>
+    <div class="ramo no-aprobado" data-prereq="">Noticias</div>
+    <div class="ramo no-aprobado" data-prereq="">Fotografía Periodística</div>
+  </div>
+
+  <div class="semestre">2° Semestre</div>
+  <div class="container">
+    <div class="ramo no-aprobado" data-prereq="Habilidades del Lenguaje I">Habilidades del Lenguaje II</div>
+    <div class="ramo no-aprobado" data-prereq="Pensamiento Crítico I">Pensamiento Crítico II</div>
+    <div class="ramo no-aprobado" data-prereq="Noticias">Taller de Noticias</div>
+  </div>
+
+  <!-- Agrega aquí el resto de los semestres con ramos siguiendo el mismo formato -->
+
+  <script>
+    const ramos = document.querySelectorAll('.ramo');
+
+    function checkPrereqs() {
+      ramos.forEach(ramo => {
+        const prereq = ramo.getAttribute('data-prereq');
+        if (prereq) {
+          const prereqRamo = Array.from(ramos).find(r => r.textContent === prereq);
+          if (!prereqRamo || !prereqRamo.classList.contains('aprobado')) {
+            ramo.classList.add('bloqueado');
+            ramo.classList.remove('no-aprobado');
+          } else {
+            ramo.classList.remove('bloqueado');
+            if (!ramo.classList.contains('aprobado')) {
+              ramo.classList.add('no-aprobado');
+            }
+          }
+        }
+      });
+    }
+
+    ramos.forEach(ramo => {
+      ramo.addEventListener('click', () => {
+        if (ramo.classList.contains('bloqueado')) return;
+
+        if (ramo.classList.contains('no-aprobado')) {
+          ramo.classList.remove('no-aprobado');
+          ramo.classList.add('aprobado');
+        } else if (ramo.classList.contains('aprobado')) {
+          ramo.classList.remove('aprobado');
+          ramo.classList.add('no-aprobado');
+        }
+
+        checkPrereqs();
+      });
+    });
+
+    checkPrereqs();
+  </script>
+
+</body>
+</html>
 
